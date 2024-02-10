@@ -340,7 +340,7 @@ class _sparse_matmul(torch.autograd.Function):
                   'STRIDE_CM': 'ldc', 
                   'STRIDE_CN': '1',
                   'SDD': True, 'TZ': 1, 'NAME': 'sdd_kernel'}
-        _sparse_matmul.sdd_cache[key] = triton.kernel(src, defines=defines, device=a.device, num_warps=[1, 2, 4])
+        _sparse_matmul.sdd_cache[key] = triton.kernel(src, defines=defines, device=a.device, num_warps=[4])
 
       kernel = _sparse_matmul.sdd_cache[key]
       # create output
