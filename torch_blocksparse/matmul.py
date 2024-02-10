@@ -340,7 +340,7 @@ class _sparse_matmul(torch.autograd.Function):
                   'STRIDE_CM': 'ldc', 
                   'STRIDE_CN': '1',
                   'SDD': True, 'TZ': 1, 'NAME': 'sdd_kernel'}
-        _sparse_matmul.sdd_cache[key] = triton.kernel(src, defines=defines, device='gpu', num_warps=[1, 2, 4])
+        _sparse_matmul.sdd_cache[key] = triton.kernel(src, defines=defines, device=a.device, num_warps=[1, 2, 4])
 
       kernel = _sparse_matmul.sdd_cache[key]
       # create output
@@ -486,7 +486,7 @@ class _sparse_matmul(torch.autograd.Function):
                  'STRIDE_CN': 'ldc' if trans_c else '1',
                  'NAME': 'dds_kernel',
                  'DDS': True}
-      _sparse_matmul.dds_cache[key] = triton.kernel(src, defines=defines, device='gpu', num_warps=[4])
+      _sparse_matmul.dds_cache[key] = triton.kernel(src, defines=defines, device=a.device, num_warps=[4])
     kernel = _sparse_matmul.dds_cache[key]
     # output
     CS0 = AS0
@@ -533,7 +533,7 @@ class _sparse_matmul(torch.autograd.Function):
                  'STRIDE_CN': 'ldc' if trans_c else '1',
                  'NAME': 'dsd_kernel',
                  'DSD': True}
-      _sparse_matmul.dsd_cache[key] = triton.kernel(src, defines=defines, device='gpu', num_warps=[4])
+      _sparse_matmul.dsd_cache[key] = triton.kernel(src, defines=defines, device=a.device, num_warps=[4])
     kernel = _sparse_matmul.dsd_cache[key]
     # output
     CS0 = BS0
